@@ -1,0 +1,12 @@
+# Archivos generados por Maven
+target/
+
+# Configuración de IDE
+.vscode/
+.idea/
+
+# Archivos compilados de Java
+*.class
+
+# Archivos de configuración local
+application-local.properties

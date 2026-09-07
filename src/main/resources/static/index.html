@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Web Solution - Gestión de Clientes</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        main {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .formulario {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .formulario h2 {
+            margin-bottom: 20px;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 11px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        .cancelar {
+            background-color: #6b7280;
+            margin-left: 10px;
+        }
+
+        .tabla-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .tabla-container h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .editar {
+            background-color: #f59e0b;
+            margin: 0;
+        }
+
+        .eliminar {
+            background-color: #dc2626;
+            margin: 0 0 0 5px;
+        }
+
+        .mensaje {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            .campos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>WEB SOLUTION</h1>
+        <p>Sistema de Gestión de Clientes</p>
+    </header>
+
+    <main>
+
+        <section class="formulario">
+
+            <h2 id="tituloFormulario">Registrar cliente</h2>
+
+            <div id="mensaje" class="mensaje"></div>
+
+            <form id="clienteForm">
+
+                <input type="hidden" id="clienteId">
+
+                <div class="campos">
+
+                    <input
+                        type="text"
+                        id="nombre"
+                        placeholder="Nombre"
+                        required>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Correo electrónico"
+                        required>
+
+                    <input
+                        type="text"
+                        id="telefono"
+                        placeholder="Teléfono"
+                        required>
+
+                    <input
+                        type="text"
+                        id="empresa"
+                        placeholder="Empresa"
+                        required>
+
+                </div>
+
+                <button type="submit" id="btnGuardar">
+                    Registrar cliente
+                </button>
+
+                <button
+                    type="button"
+                    class="cancelar"
+                    id="btnCancelar"
+                    onclick="cancelarEdicion()"
+                    style="display:none;">
+                    Cancelar
+                </button>
+
+            </form>
+
+        </section>
+
+        <section class="tabla-container">
+
+            <h2>Clientes registrados</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Empresa</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaClientes">
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const API_URL = "/api/clientes";
+
+        const formulario = document.getElementById("clienteForm");
+
+        const tabla = document.getElementById("tablaClientes");
+
+        const mensaje = document.getElementById("mensaje");
+
+        let clientes = [];
+
+        // Consulta los clientes registrados.
+        async function cargarClientes() {
+
+            try {
+
+                const respuesta = await fetch(API_URL);
+
+                clientes = await respuesta.json();
+
+                tabla.innerHTML = "";
+
+                clientes.forEach(cliente => {
+
+                    const fila = document.createElement("tr");
+
+                    fila.innerHTML = `
+                        <td>${cliente.id}</td>
+                        <td>${cliente.nombre}</td>
+                        <td>${cliente.email}</td>
+                        <td>${cliente.telefono}</td>
+                        <td>${cliente.empresa}</td>
+
+                        <td>
+                            <button
+                                class="editar"
+                                onclick="editarCliente(${cliente.id})">
+                                Editar
+                            </button>
+
+                            <button
+                                class="eliminar"
+                                onclick="eliminarCliente(${cliente.id})">
+                                Eliminar
+                            </button>
+                        </td>
+                    `;
+
+                    tabla.appendChild(fila);
+                });
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    "No fue posible cargar los clientes.",
+                    true
+                );
+            }
+        }
+
+        // Registra o actualiza un cliente.
+        formulario.addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+            const id = document.getElementById("clienteId").value;
+
+            const cliente = {
+
+                nombre: document.getElementById("nombre").value,
+
+                email: document.getElementById("email").value,
+
+                telefono: document.getElementById("telefono").value,
+
+                empresa: document.getElementById("empresa").value
+            };
+
+            try {
+
+                let respuesta;
+
+                if (id) {
+
+                    respuesta = await fetch(`${API_URL}/${id}`, {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(cliente)
+                    });
+
+                } else {
+
+                    respuesta = await fetch(API_URL, {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(cliente)
+                    });
+                }
+
+                if (!respuesta.ok) {
+                    throw new Error("Error en la operación");
+                }
+
+                mostrarMensaje(
+                    id
+                        ? "Cliente actualizado correctamente."
+                        : "Cliente registrado correctamente."
+                );
+
+                cancelarEdicion();
+
+                cargarClientes();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    "Ocurrió un error al guardar el cliente.",
+                    true
+                );
+            }
+        });
+
+        // Carga los datos del cliente seleccionado.
+        function editarCliente(id) {
+
+            const cliente = clientes.find(c => c.id === id);
+
+            if (!cliente) {
+                return;
+            }
+
+            document.getElementById("clienteId").value = cliente.id;
+
+            document.getElementById("nombre").value = cliente.nombre;
+
+            document.getElementById("email").value = cliente.email;
+
+            document.getElementById("telefono").value = cliente.telefono;
+
+            document.getElementById("empresa").value = cliente.empresa;
+
+            document.getElementById("tituloFormulario").textContent =
+                "Editar cliente";
+
+            document.getElementById("btnGuardar").textContent =
+                "Actualizar cliente";
+
+            document.getElementById("btnCancelar").style.display =
+                "inline-block";
+        }
+
+        // Elimina un cliente.
+        async function eliminarCliente(id) {
+
+            const confirmar = confirm(
+                "¿Está seguro de eliminar este cliente?"
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+
+                const respuesta = await fetch(
+                    `${API_URL}/${id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+                if (!respuesta.ok) {
+                    throw new Error("Error al eliminar");
+                }
+
+                mostrarMensaje(
+                    "Cliente eliminado correctamente."
+                );
+
+                cargarClientes();
+
+            } catch (error) {
+
+                mostrarMensaje(
+                    "No fue posible eliminar el cliente.",
+                    true
+                );
+            }
+        }
+
+        // Cancela el modo edición.
+        function cancelarEdicion() {
+
+            formulario.reset();
+
+            document.getElementById("clienteId").value = "";
+
+            document.getElementById("tituloFormulario").textContent =
+                "Registrar cliente";
+
+            document.getElementById("btnGuardar").textContent =
+                "Registrar cliente";
+
+            document.getElementById("btnCancelar").style.display =
+                "none";
+        }
+
+        // Muestra mensajes al usuario.
+        function mostrarMensaje(texto, error = false) {
+
+            mensaje.textContent = texto;
+
+            mensaje.style.display = "block";
+
+            if (error) {
+                mensaje.style.backgroundColor = "#fee2e2";
+                mensaje.style.color = "#991b1b";
+            } else {
+                mensaje.style.backgroundColor = "#dcfce7";
+                mensaje.style.color = "#166534";
+            }
+
+            setTimeout(() => {
+                mensaje.style.display = "none";
+            }, 3000);
+        }
+
+        // Carga inicial de clientes.
+        cargarClientes();
+
+    </script>
+
+</body>
+
+</html>
