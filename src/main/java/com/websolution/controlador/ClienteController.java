@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class ClienteController {
      */
     @PostMapping
     public ResponseEntity<Cliente> crearCliente(
-            @RequestBody Cliente cliente) {
+            @Valid @RequestBody Cliente cliente) {
 
         Cliente nuevoCliente = clienteService.guardar(cliente);
 
@@ -78,7 +79,7 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> actualizarCliente(
             @PathVariable Integer id,
-            @RequestBody Cliente cliente) {
+            @Valid @RequestBody Cliente cliente) {
 
         Cliente clienteActualizado =
                 clienteService.actualizar(id, cliente);

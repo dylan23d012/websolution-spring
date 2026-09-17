@@ -6,6 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * Entidad Cliente.
@@ -22,15 +26,24 @@ public class Cliente {
     @Column(name = "id_cliente")
     private Integer id;
 
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(max = 100, message = "El nombre no puede superar los 100 caracteres")
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
+    @Email(message = "Ingrese un correo electrónico válido")
+    @Size(max = 150, message = "El correo no puede superar los 150 caracteres")
     @Column(name = "email")
     private String email;
 
+    @Pattern(
+        regexp = "\\d{10}",
+        message = "El teléfono debe contener exactamente 10 números"
+    )
     @Column(name = "telefono")
     private String telefono;
 
+    @Size(max = 100, message = "La empresa no puede superar los 100 caracteres")
     @Column(name = "empresa")
     private String empresa;
 
