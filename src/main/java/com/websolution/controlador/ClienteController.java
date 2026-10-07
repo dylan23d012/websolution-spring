@@ -2,6 +2,7 @@ package com.websolution.controlador;
 
 import com.websolution.modelo.Cliente;
 import com.websolution.servicio.ClienteService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,23 +16,18 @@ import java.util.List;
  * Expone los servicios CRUD mediante una API REST.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;
 
-    /**
-     * Constructor con inyección de dependencias.
-     */
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
 
     /**
-     * Consulta todos los clientes.
-     *
-     * Método HTTP: GET
-     * Ruta: /api/clientes
+     * Lista todos los clientes registrados.
      */
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
@@ -39,25 +35,17 @@ public class ClienteController {
     }
 
     /**
-     * Consulta un cliente por su ID.
-     *
-     * Método HTTP: GET
-     * Ruta: /api/clientes/{id}
+     * Busca un cliente por su ID.
      */
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Integer id) {
-
         return clienteService.buscarPorId(id)
                 .map(ResponseEntity::ok)
-                .orElseGet(() ->
-                        ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
      * Registra un nuevo cliente.
-     *
-     * Método HTTP: POST
-     * Ruta: /api/clientes
      */
     @PostMapping
     public ResponseEntity<Cliente> crearCliente(
@@ -72,9 +60,6 @@ public class ClienteController {
 
     /**
      * Actualiza un cliente existente.
-     *
-     * Método HTTP: PUT
-     * Ruta: /api/clientes/{id}
      */
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> actualizarCliente(
@@ -94,17 +79,34 @@ public class ClienteController {
     /**
      * Elimina un cliente.
      *
-     * Método HTTP: DELETE
-     * Ruta: /api/clientes/{id}
+     * Si el cliente tiene proyectos asociados,
+     * la base de datos impide su eliminación.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarCliente(
+    public ResponseEntity<String> eliminarCliente(
             @PathVariable Integer id) {
 
-        if (!clienteService.eliminar(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        try {
 
-        return ResponseEntity.noContent().build();
+            boolean eliminado = clienteService.eliminar(id);
+
+            if (!eliminado) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("El cliente no existe.");
+            }
+
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .build();
+
+        } catch (DataIntegrityViolationException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(
+                        "No se puede eliminar el cliente porque tiene proyectos asociados."
+                    );
+        }
     }
 }
