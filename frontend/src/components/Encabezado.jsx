@@ -1,7 +1,4 @@
-// Componente reutilizable encargado de mostrar el encabezado
-// y la navegación principal del sistema Web Solution.
-
-function Encabezado() {
+﻿function Encabezado() {
   return (
     <header className="encabezado">
       <div className="logo">
@@ -9,12 +6,12 @@ function Encabezado() {
       </div>
 
       <nav className="navegacion">
-        <a href="#">Inicio</a>
-        <a href="#">Clientes</a>
-        <a href="#">Proyectos</a>
-        <a href="#">Servicios</a>
-        <a href="#">Tareas</a>
-        <a href="#">Reportes</a>
+        <a href="#inicio">Inicio</a>
+        <a href="#clientes">Clientes</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#tareas">Tareas</a>
+        <a href="#reportes">Reportes</a>
       </nav>
     </header>
   );

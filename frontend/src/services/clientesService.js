@@ -52,7 +52,7 @@ export async function actualizarCliente(id, cliente) {
 export async function eliminarCliente(id) {
   console.log("ID enviado para eliminar:", id);
 
-  const respuesta = await fetch(`${API_URL}/${id}`, {
+ const respuesta = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
   });
 
