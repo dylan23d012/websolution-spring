@@ -1,12 +1,25 @@
-# Archivos generados por Maven
+﻿# Archivos generados por Maven
 target/
 
-# Configuración de IDE
+# Dependencias y compilaciones de React/Vite
+frontend/node_modules/
+frontend/dist/
+
+# Configuracion de IDE
 .vscode/
 .idea/
+*.iml
 
-# Archivos compilados de Java
+# Archivos compilados y registros
 *.class
+*.log
 
-# Archivos de configuración local
+# Configuracion local y credenciales
 application-local.properties
+.env
+.env.*
+!.env.example
+
+# Archivos temporales de Windows
+Thumbs.db
+Desktop.ini

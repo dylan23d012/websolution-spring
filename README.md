@@ -1,137 +1,168 @@
-# WebSolution-Spring
+﻿# WebSolution-Spring
 
-## Módulo de Gestión de Clientes
+## 1. Descripción del proyecto
 
-Proyecto web desarrollado para la evidencia GA7-220501096-AA3-EV01, utilizando Spring Boot, Spring Data JPA, Hibernate, MySQL y Maven.
+WebSolution es una aplicación para la gestión interna de una empresa dedicada al diseño y desarrollo de páginas web. El sistema permite administrar clientes, proyectos, servicios y tareas mediante una API REST y una interfaz web.
 
-## Tecnologías utilizadas
+Este proyecto se desarrolla como parte de la evidencia GA7-220501096-AA5-EV03.
+
+## 2. Tecnologías utilizadas
 
 - Java 8
 - Spring Boot 2.7.18
+- Spring Web
 - Spring Data JPA
 - Hibernate
-- MySQL
+- MySQL 8.4
 - Maven
+- React y Vite
 - HTML, CSS y JavaScript
 - Git y GitHub
 
-## Descripción
+## 3. Arquitectura del sistema
 
-El módulo permite gestionar los clientes registrados en la base de datos del proyecto Web Solution.
+El backend utiliza una arquitectura por capas para separar las responsabilidades:
 
-La aplicación implementa las operaciones CRUD:
+- **Controlador:** recibe las solicitudes HTTP y devuelve las respuestas.
+- **Servicio:** contiene la lógica de negocio.
+- **Repositorio:** permite consultar y modificar los datos mediante Spring Data JPA.
+- **Modelo:** representa las entidades del sistema.
+- **Manejo global de errores:** centraliza respuestas para errores de validación y otras excepciones.
 
-- Crear clientes.
-- Consultar clientes.
-- Actualizar clientes.
-- Eliminar clientes.
+El flujo general es:
 
-## Arquitectura
+Interfaz React → Controlador REST → Servicio → Repositorio → MySQL.
 
-La aplicación utiliza una arquitectura por capas:
+## 4. Módulos y entidades
 
-```text
-Interfaz web
-     ↓
-ClienteController
-     ↓
-ClienteService
-     ↓
-ClienteRepository
-     ↓
-Spring Data JPA
-     ↓
-Hibernate
-     ↓
-MySQL
-Estructura del proyectoWebSolution-Spring
-├── src
-│   └── main
-│       ├── java
-│       │   └── com.websolution
-│       │       ├── controlador
-│       │       │   └── ClienteController.java
-│       │       ├── modelo
-│       │       │   └── Cliente.java
-│       │       ├── repositorio
-│       │       │   └── ClienteRepository.java
-│       │       ├── servicio
-│       │       │   └── ClienteService.java
-│       │       └── WebSolutionApplication.java
-│       └── resources
-│           ├── application.properties
-│           └── static
-│               └── index.html
-├── .gitignore
-├── pom.xml
-├── README.md
-└── database.sql
-Endpoints de la API
-Consultar todos los clientes
-GET /api/clientes
-Consultar un cliente
-GET /api/clientes/{id}
-Crear un cliente
-POST /api/clientes
-Actualizar un cliente
-PUT /api/clientes/{id}
-Eliminar un cliente
-DELETE /api/clientes/{id}
-Base de datos
+El proyecto contiene los siguientes módulos:
 
-El proyecto utiliza la base de datos MySQL websolution y la tabla clientes.
+- **Clientes:** administra la información de los clientes.
+- **Proyectos:** administra los proyectos y su relación con los clientes.
+- **Servicios:** permite gestionar los servicios ofrecidos por la empresa.
+- **Tareas:** permite gestionar las tareas asociadas a los proyectos.
 
-La conexión se configura mediante la variable de entorno DB_PASSWORD, evitando almacenar la contraseña directamente en el código fuente.
+Las entidades implementadas corresponden a las tablas existentes en la base de datos. La estructura y las relaciones se deben consultar en `database.sql` y en la configuración de MySQL.
 
-Pruebas realizadas
+## 5. Endpoints de la API REST
 
-Se realizaron pruebas de las cuatro operaciones CRUD:
+La API utiliza la dirección base `http://localhost:8081`.
 
-Crear cliente: prueba exitosa.
-Consultar clientes: prueba exitosa.
-Actualizar cliente: prueba exitosa.
-Eliminar cliente: prueba exitosa.
+### Clientes
 
-También se verificó la integración entre la interfaz web, Spring Boot, Spring Data JPA, Hibernate y MySQL.
+| Método HTTP | Endpoint | Operación |
+|---|---|---|
+| GET | `/api/clientes` | Consultar todos los clientes |
+| GET | `/api/clientes/{id}` | Consultar un cliente por ID |
+| POST | `/api/clientes` | Registrar un cliente |
+| PUT | `/api/clientes/{id}` | Actualizar un cliente |
+| DELETE | `/api/clientes/{id}` | Eliminar un cliente |
 
-Estándares de codificación
+### Proyectos
 
-El código utiliza:
+| Método HTTP | Endpoint | Operación |
+|---|---|---|
+| GET | `/api/proyectos` | Consultar todos los proyectos |
+| GET | `/api/proyectos/{id}` | Consultar un proyecto por ID |
+| POST | `/api/proyectos` | Registrar un proyecto |
+| PUT | `/api/proyectos/{id}` | Actualizar un proyecto |
+| DELETE | `/api/proyectos/{id}` | Eliminar un proyecto |
 
-Nombres descriptivos para clases, métodos y variables.
-Organización por paquetes según responsabilidad.
-Inyección de dependencias mediante constructores.
-Comentarios y documentación mediante JavaDoc.
-Separación de responsabilidades entre controlador, servicio, repositorio y modelo.
-Ejecución
+### Servicios
 
-Para ejecutar el proyecto se requiere:
+| Método HTTP | Endpoint | Operación |
+|---|---|---|
+| GET | `/api/servicios` | Consultar todos los servicios |
+| GET | `/api/servicios/{id}` | Consultar un servicio por ID |
+| POST | `/api/servicios` | Registrar un servicio |
+| PUT | `/api/servicios/{id}` | Actualizar un servicio |
+| DELETE | `/api/servicios/{id}` | Eliminar un servicio |
 
-Tener Java 8 instalado.
-Tener Maven instalado.
-Tener MySQL ejecutándose.
-Tener creada la base de datos websolution.
-Configurar la variable de entorno DB_PASSWORD.
+### Tareas
 
-Ejecutar:
+| Método HTTP | Endpoint | Operación |
+|---|---|---|
+| GET | `/api/tareas` | Consultar todas las tareas |
+| GET | `/api/tareas/{id}` | Consultar una tarea por ID |
+| POST | `/api/tareas` | Registrar una tarea |
+| PUT | `/api/tareas/{id}` | Actualizar una tarea |
+| DELETE | `/api/tareas/{id}` | Eliminar una tarea |
 
+## 6. Validaciones y manejo de errores
+
+La aplicación incorpora validaciones para los datos recibidos y un manejador global de excepciones.
+
+Entre las respuestas HTTP utilizadas se encuentran:
+
+- `200 OK`: solicitud procesada correctamente.
+- `201 Created`: registro creado correctamente.
+- `204 No Content`: eliminación realizada correctamente.
+- `400 Bad Request`: datos inválidos o solicitud mal formada.
+- `404 Not Found`: recurso no encontrado.
+- `409 Conflict`: operación que incumple una restricción de integridad.
+
+Las respuestas específicas dependen del endpoint y del tipo de error.
+
+## 7. Base de datos y configuración
+
+La aplicación utiliza la base de datos MySQL `websolution`, configurada para conectarse al puerto `3307` en el entorno local.
+
+La conexión se configura en `src/main/resources/application.properties`. La contraseña se obtiene mediante la variable de entorno `DB_PASSWORD` y no debe escribirse directamente en el código ni publicarse en GitHub.
+
+La propiedad `spring.jpa.hibernate.ddl-auto=validate` permite comprobar la correspondencia entre las entidades y el esquema existente. Por tanto, la base de datos debe estar creada y tener las tablas necesarias antes de iniciar el backend.
+
+## 8. Requisitos previos
+
+- Java 8 instalado.
+- Maven instalado.
+- MySQL en ejecución.
+- Base de datos `websolution` configurada.
+- Variable de entorno `DB_PASSWORD` definida.
+- Node.js y npm instalados para ejecutar el frontend.
+
+## 9. Ejecución del backend
+
+Desde la carpeta raíz del proyecto, ejecutar:
+
+```bash
+mvn clean compile
 mvn spring-boot:run
+```
 
-La aplicación estará disponible en:
+El backend estará disponible en:
 
-http://localhost:8081/
-Evidencia
+`http://localhost:8081`
 
-Este proyecto corresponde a la evidencia:
+Para consultar los clientes, por ejemplo, se puede acceder a:
 
-GA7-220501096-AA3-EV01 - Codificación de módulos del software stand-alone, web y móvil.
+`http://localhost:8081/api/clientes`
 
+## 10. Ejecución del frontend
 
-### Importante
+Abrir otra terminal y ejecutar:
 
-No pongas tu contraseña de MySQL en el README. 👍
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-Cuando hayas creado y guardado `README.md`, ejecuta:
+Vite mostrará en la terminal la dirección local en la que se encuentra disponible la interfaz.
 
-```powershell
-tree /F
+## 11. Pruebas realizadas
+
+Se comprobó que los endpoints de clientes, proyectos, servicios y tareas responden a solicitudes GET en el entorno local.
+
+También se compiló el proyecto Java mediante Maven. Antes de entregar la evidencia, se deben completar y documentar las pruebas de creación, consulta individual, actualización, eliminación y respuestas de error de cada módulo.
+
+## 12. Control de versiones
+
+El proyecto se gestiona mediante Git y GitHub. Los cambios deben registrarse en commits con mensajes descriptivos, evitando incluir archivos generados como `target/`, dependencias instaladas como `node_modules/` o contraseñas.
+
+## 13. Repositorio
+
+https://github.com/dylan23d012/websolution-spring
+
+## 14. Evidencia
+
+GA7-220501096-AA5-EV03: Diseño y desarrollo de servicios web para el proyecto de software.
