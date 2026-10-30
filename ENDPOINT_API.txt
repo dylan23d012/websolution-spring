@@ -1,0 +1,33 @@
+**WEB SOLUTION – LISTADO DE ENDPOINTS API**
+
+**Servidor:** http://localhost:8081
+
+**1. CLIENTES**
+- GET http://localhost:8081/api/clientes
+- GET http://localhost:8081/api/clientes/{id}
+- POST http://localhost:8081/api/clientes
+- PUT http://localhost:8081/api/clientes/{id}
+- DELETE http://localhost:8081/api/clientes/{id}
+
+**2. PROYECTOS**
+- GET http://localhost:8081/api/proyectos
+- GET http://localhost:8081/api/proyectos/{id}
+- POST http://localhost:8081/api/proyectos
+- PUT http://localhost:8081/api/proyectos/{id}
+- DELETE http://localhost:8081/api/proyectos/{id}
+
+**3. SERVICIOS**
+- GET http://localhost:8081/api/servicios
+- GET http://localhost:8081/api/servicios/{id}
+- POST http://localhost:8081/api/servicios
+- PUT http://localhost:8081/api/servicios/{id}
+- DELETE http://localhost:8081/api/servicios/{id}
+
+**4. TAREAS**
+- GET http://localhost:8081/api/tareas
+- GET http://localhost:8081/api/tareas/{id}
+- POST http://localhost:8081/api/tareas
+- PUT http://localhost:8081/api/tareas/{id}
+- DELETE http://localhost:8081/api/tareas/{id}
+
+**Nota:** Los métodos POST y PUT requieren enviar los datos correspondientes en formato JSON.
