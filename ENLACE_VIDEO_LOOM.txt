@@ -1,0 +1,7 @@
+﻿VIDEO DE DEMOSTRACIÓN – EVIDENCIA GA7-220501096-AA5-EV04
+
+Proyecto: Web Solution – API del sistema de gestión interna.
+
+En el siguiente enlace se encuentra el video de demostración de las pruebas realizadas a la API mediante Postman:
+
+https://www.loom.com/share/f69e265ca56b4b95ac6e9cdac22dd475
